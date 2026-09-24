@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="VetCare_Desarrollo" default="default" basedir=".">
+    <property file="nbproject/project.properties"/>
+    <import file="nbproject/build-impl.xml"/>
+    <target name="default" depends="jar" description="Build the project."/>
+</project>

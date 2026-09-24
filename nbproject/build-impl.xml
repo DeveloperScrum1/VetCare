@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="VetCare_Desarrollo-impl" default="default" basedir=".">
+    <target name="-pre-init"><mkdir dir="${build.dir}"/></target>
+    <target name="-init" depends="-pre-init">
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.generated.sources.dir}"/>
+        <property name="includes" value="**"/>
+        <property name="excludes" value=""/>
+    </target>
+    <target name="-pre-compile" depends="-init"/>
+    <target name="-compile" depends="-pre-compile">
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" encoding="${source.encoding}" source="${javac.source}" target="${javac.target}" includeantruntime="false" debug="true" deprecation="${javac.deprecation}" classpath="${javac.classpath}">
+            <include name="${includes}"/>
+            <exclude name="${excludes}"/>
+        </javac>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+    </target>
+    <target name="-post-compile" depends="-compile"/>
+    <target name="compile" depends="-post-compile" description="Compile project."/>
+    <target name="-pre-jar" depends="compile"><mkdir dir="${dist.dir}"/></target>
+    <target name="-do-jar" depends="-pre-jar">
+        <mkdir dir="${dist.dir}/lib"/>
+        <copy file="${file.reference.mysql_connector_j_8_0_33_jar}" todir="${dist.dir}/lib"/>
+        <jar jarfile="${dist.jar}" basedir="${build.classes.dir}" manifest="${manifest.file}">
+            <manifest><attribute name="Class-Path" value="lib/mysql-connector-j-8.0.33.jar"/></manifest>
+        </jar>
+    </target>
+    <target name="jar" depends="-do-jar" description="Build JAR."/>
+    <target name="run" depends="compile">
+        <java classname="${main.class}" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${build.classes.dir}"/>
+                <pathelement location="${file.reference.mysql_connector_j_8_0_33_jar}"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="clean"><delete dir="${build.dir}"/><delete dir="${dist.dir}"/></target>
+    <target name="default" depends="jar"/>
+</project>
